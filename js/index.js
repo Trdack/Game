@@ -34,14 +34,12 @@ class AppUI {
     #getWindowSize(elem) {
         let w = elem.clientWidth;
         let h = elem.clientHeight;
-
         return {w, h};
     }
     
 
     // Finish: 渲染游戏列表
     #renderGameListElem(){
-
         let fragment = document.createDocumentFragment();
         let gameListElem = document.createElement('div');
         gameListElem.classList.add('game-list');
@@ -59,10 +57,10 @@ class AppUI {
             titleElem.innerHTML = item.name;
             elem.onclick = () => {
                 import(item.modulesUrl).then((module) => {
-                    // console.log("打开贪吃蛇游戏！");
-                    // const gameWindow = this.openGameWindow();
+                    console.log("打开贪吃蛇游戏！");
+                    this.gameWindow('open');
                     const Game = module.default;
-                    const game = new Game();
+                    const game = new Game(this.#gameWindow);
                 }).catch(err => {
                     console.error('Module loading failed:', err);
                 });
@@ -77,7 +75,8 @@ class AppUI {
         return fragment;
     }
 
-    #automaticSetupGameListElemSize(    ) {
+    // Finish: 游戏列表界面尺寸
+    #automaticSetupGameListElemSize() {
         let width = this.#rootElem.clientWidth;
         let height = this.#rootElem.clientHeight;
         // console.log(width, this.#itemSize.margin*2 + this.#itemSize.width);
@@ -96,20 +95,34 @@ class AppUI {
         // this.#gameListElem.style.paddingRight = (gameListElemPadding - this.#itemSize.margin) + 'px';
     }
 
-    // gameListElem 开关
-    gameListElem(str) {
-        if (str = 'open') {
+    // Finish: gameListElem 开关
+    gameListElem(signal) {
+        if (signal == 'open') {
             this.#renderGameListElem();
             this.#rootElem.appendChild(this.#gameListElem);
             this.#automaticSetupGameListElemSize(); 
-        } else if (str = 'close') {
+        } else if (signal == 'close') {
             this.#gameListElem.remove();
         }
     }
 
+    // Finish: 渲染游戏窗口
     #renderGameWindow() {
-
+        let elem = document.createElement('div');
+        elem.classList.add('game-window');
+        return elem;
     }
+
+    // Finish: 游戏窗口开关
+    gameWindow(signal) {
+        if (signal == 'open') {
+            this.#gameWindow = this.#renderGameWindow();
+            this.#rootElem.appendChild(this.#gameWindow);
+        } else if (signal == 'close') {
+            this.#gameWindow.remove();
+        }
+    }
+
 }
 
 
