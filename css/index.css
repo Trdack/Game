@@ -1,2 +1,4 @@
+@import url('./modules/var.css');
 @import url('./modules/style.css');
 @import url('./modules/game.css');
+@import url('./modules/snake.css');

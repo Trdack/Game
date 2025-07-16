@@ -4,20 +4,15 @@ const data = [
         name: "贪吃蛇",
         char: "snake",
         cover: "./images/snake_cover.png",
-        modulesUrl: "./modules/game_snake.js",
+        modulesUrl: "./modules/game/game_snake.js",
     },
 ];
 
 
-
-class AppStyle {
-    
-}
-
 class AppUI {
     #rootElem = document.getElementById('root');
-    #gameListElem;
-    #gameWindow;
+    gameListElem;
+    gameWindowElem;
     #itemSize = {
         margin: 10,
         width: 180,
@@ -60,7 +55,13 @@ class AppUI {
                     console.log("打开贪吃蛇游戏！");
                     this.gameWindow('open');
                     const Game = module.default;
-                    const game = new Game(this.#gameWindow);
+                    this.gameList('close');
+                    let game = new Game(this.gameWindowElem, this.gameListElem);
+                    game.quitElem.addEventListener('click', () => {
+                        this.gameWindow('close');
+                        game = null;
+                        this.gameList('open');
+                    });
                 }).catch(err => {
                     console.error('Module loading failed:', err);
                 });
@@ -71,7 +72,7 @@ class AppUI {
             gameListElem.appendChild(elem);
             return elem;
         });
-        this.#gameListElem = gameListElem;
+        this.gameListElem = gameListElem;
         return fragment;
     }
 
@@ -80,7 +81,7 @@ class AppUI {
         let width = this.#rootElem.clientWidth;
         let height = this.#rootElem.clientHeight;
         // console.log(width, this.#itemSize.margin*2 + this.#itemSize.width);
-        const scrollbarWidth = this.#gameListElem.offsetWidth - this.#gameListElem.clientWidth;
+        const scrollbarWidth = this.gameListElem.offsetWidth - this.gameListElem.clientWidth;
         // console.log(scrollbarWidth);
         // 获取当前窗口的宽度和高度
         let gameListElemWidth = width - (width % (this.#itemSize.margin + this.#itemSize.width));
@@ -89,20 +90,20 @@ class AppUI {
             gameListElemPadding += (this.#itemSize.margin*2 + this.#itemSize.width) / 2;
         }
         // console.log(gameListElemPadding);
-        this.#gameListElem.style.paddingTop = '20px';
-        this.#gameListElem.style.paddingBottom = '20px';
-        this.#gameListElem.style.paddingLeft = (gameListElemPadding) + 'px';
+        this.gameListElem.style.paddingTop = '20px';
+        this.gameListElem.style.paddingBottom = '20px';
+        this.gameListElem.style.paddingLeft = (gameListElemPadding) + 'px';
         // this.#gameListElem.style.paddingRight = (gameListElemPadding - this.#itemSize.margin) + 'px';
     }
 
     // Finish: gameListElem 开关
-    gameListElem(signal) {
+    gameList(signal) {
         if (signal == 'open') {
             this.#renderGameListElem();
-            this.#rootElem.appendChild(this.#gameListElem);
+            this.#rootElem.appendChild(this.gameListElem);
             this.#automaticSetupGameListElemSize(); 
         } else if (signal == 'close') {
-            this.#gameListElem.remove();
+            this.gameListElem.remove();
         }
     }
 
@@ -116,10 +117,10 @@ class AppUI {
     // Finish: 游戏窗口开关
     gameWindow(signal) {
         if (signal == 'open') {
-            this.#gameWindow = this.#renderGameWindow();
-            this.#rootElem.appendChild(this.#gameWindow);
+            this.gameWindowElem = this.#renderGameWindow();
+            this.#rootElem.appendChild(this.gameWindowElem);
         } else if (signal == 'close') {
-            this.#gameWindow.remove();
+            this.gameWindowElem.remove();
         }
     }
 
@@ -135,7 +136,7 @@ class App {
 
     openGameList() {
         // console.log("打开游戏列表！");
-        this.#UI.gameListElem('open');
+        this.#UI.gameList('open');
     }
 
 }

@@ -16,5 +16,12 @@ html, body, #root {
 }
 
 #root {
-    background-color: #ddeddb;
+    background-color: var(--bg);
+}
+
+.center {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
 }

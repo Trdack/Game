@@ -1,0 +1,13 @@
+.dark {
+    --fc: #fff;
+    --bg: #007a4e;
+    --bg-hover: #000;
+    --btn-bg: #007a4e;
+    --btn-fc: #fff;
+}
+
+.light {
+    --fc: #000;
+    --bg: #fff;
+    --bg-hover: #eee;
+}
