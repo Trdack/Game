@@ -18,7 +18,7 @@ class SnakeGame {
         score: 0,           // 成绩
         snakeElem: [],      // 蛇元素
         gameInterval: null, // 游戏计时器
-        startMenu: [["开始游戏", this.start_game], ["游戏档案", this.open_game_archive], ["设置", this.open_set_up], ["游戏说明", this.open_instructions], ["退出游戏", this.quit_game]], // 开始菜单项目
+        startMenu: [["开始游戏", this.start_game.bind(this)], ["游戏档案", this.open_game_archive.bind(this)], ["设置", this.open_set_up.bind(this)], ["游戏说明", this.open_instructions.bind(this)], ["退出游戏", this.quit_game.bind(this)]], // 开始菜单项目
         startMenuEvent: [], // 开始菜单事件
     };
     #publicStyle = {
@@ -97,11 +97,12 @@ class SnakeGame {
             zIndex: 10
         },
     };
-    #UI = {};
+    
 
     // _ 构造函数
     constructor(gameWindowElem, gameListElem) {
         this.gameWindow = gameWindowElem;
+        this.gameWindow.classList.add('snake')
         this.#init();
         this.#main();
     };
@@ -117,10 +118,6 @@ class SnakeGame {
 
     // TODO: 初始化
     #init() {
-        // 开始界面
-        // this.#startInterface();
-        // 游戏开始菜单
-        this.#startMenu();
         // 初始数据
         this.#initData();
         // 初始化界面
@@ -136,7 +133,10 @@ class SnakeGame {
 
     // TODO: 初始化界面
     #initUI() {
-        // 
+        // 开始界面
+        // this.#startInterface();
+        // 游戏开始菜单
+        this.open_start_menu();
     }
 
     // TODO: 开始界面
@@ -149,15 +149,14 @@ class SnakeGame {
     }
 
     // TODO: 开始菜单
-    #startMenu() {
+    open_start_menu() {
         let startMenuStyle = this.#style.startMenu;
-        console.log(startMenuStyle)
         let startMenuItemStyle = this.#style.startMenuItem;
         let startMenuItemHover = this.#style.startMenuItemHover;
         let startMenuItemRestore = this.#style.startMenuItem;
-        let startMenuElem = this.#fndiv(startMenuStyle);
+        this.startMenuElem = this.#fndiv(startMenuStyle);
         let fragment = document.createDocumentFragment();
-        fragment.appendChild(startMenuElem);
+        fragment.appendChild(this.startMenuElem);
         this.startMenuItem = this.#data.startMenu.map((item) => {
             let itemElem = this.#fndiv(startMenuItemStyle);
             itemElem.innerHTML = item[0]; 
@@ -174,7 +173,7 @@ class SnakeGame {
             itemElem.addEventListener("click", (e) => {
                 item[1]();
             });
-            startMenuElem.appendChild(itemElem);
+            this.startMenuElem.appendChild(itemElem);
             return itemElem;
         });
         let index = this.startMenuItem.length - 1;
@@ -182,15 +181,41 @@ class SnakeGame {
         this.gameWindow.appendChild(fragment);
     }
 
+    // TODO: 关闭游戏开始菜单
+    close_start_menu() {
+        if (this.startMenuElem) {
+            this.startMenuElem.remove();
+        }
+    }
+
+    // TODO: 初始化游戏地图
+    init_map() {
+        console.log("初始化游戏地图");
+        let gameMapElem = document.createElement("div");
+        gameMapElem.classList.add('game-map');
+        let fragment = document.createDocumentFragment()
+        fragment.appendChild(gameMapElem);
+        for (let i = 0; i < 20; i++) {
+            
+        }
+        this.gameWindow.appendChild(fragment);
+    }
 
     // TODO: 开始游戏
     start_game() {
         console.log("开始游戏")
+        // - 关闭游戏开始菜单
+        this.close_start_menu();
+        // - 初始化游戏地图
+        this.init_map();
+        // - 初始化蛇
+        // - 进入游戏主循环
     }
 
     // TODO: 游戏档案
     open_game_archive() {
         console.log("打开游戏档案")
+        // - l
     }
 
     // TODO: 设置
@@ -229,9 +254,9 @@ class SnakeGame {
         // 使用计时器循环移动
         this.#data.gameInterval = setInterval(() => {
             /* 
-                流程：
-                    1.检测碰撞
-                    2.判断是否可以移动
+                - 流程：
+                    - 1.检测碰撞
+                    - 2.判断是否可以移动
                         - true: 移动
                         - false: 结束游戏
              */

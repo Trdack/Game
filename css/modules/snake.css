@@ -35,7 +35,17 @@
 }
 
 
+/* 游戏地图 */
+.snake .game-map {
+    width: 1000px;
+    height: 600px;
+    border: 1px solid #aaa;
+}
 
+/* 地图网格 */
+.snake .game-map .grid {
+    width: 10px;
+}
 
 .test {
     background-color: transparent;
