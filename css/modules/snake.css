@@ -37,9 +37,13 @@
 
 /* 游戏地图 */
 .snake .game-map {
+    position: absolute;
+    top: 50%;
+    left: 50%;
     width: 1000px;
     height: 600px;
     border: 1px solid #aaa;
+    transform: translate(-50%, -50%);
 }
 
 /* 地图网格 */
