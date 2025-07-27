@@ -37,6 +37,8 @@
 
 /* 游戏地图 */
 .snake .game-map {
+    display: flex;
+    flex-flow: row wrap;
     position: absolute;
     top: 50%;
     left: 50%;
@@ -48,8 +50,11 @@
 
 /* 地图网格 */
 .snake .game-map .grid {
-    width: 10px;
+    /* border: 1px solid transparent; */
+    border: 1px solid #efefef;
+    box-sizing: border-box;
 }
+
 
 .test {
     background-color: transparent;

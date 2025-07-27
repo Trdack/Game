@@ -103,6 +103,7 @@ class SnakeGame {
     constructor(gameWindowElem, gameListElem) {
         this.gameWindow = gameWindowElem;
         this.gameWindow.classList.add('snake')
+        this.#getGameWindowSize()
         this.#init();
         this.#main();
     };
@@ -116,12 +117,50 @@ class SnakeGame {
         return div;
     }
 
+    // TODO: 监听游戏界面尺寸
+    #getGameWindowSize() {
+        // 获取窗口尺寸
+        let width = window.innerWidth;
+        let height = window.innerHeight;
+        return [width, height];
+    }
+    // TODO: 计算机游戏地图尺寸以及行和列
+    #getGameMapSize() {
+        let [winWidth, winHeight] = this.#getGameWindowSize();
+        console.log({winWidth, winHeight});
+        let mapWidth = 0;
+        let mapHeight = 0;
+        let size = this.#data.gridSize;
+        let padding = 60;
+        let x = 0;
+        let y = 0;
+        let screenRatio = winWidth / winHeight;
+        if (screenRatio > 1) {
+            console.log("横屏")
+            mapWidth = (winWidth - padding * 2) - ((winWidth - padding * 2) % size);
+            mapHeight = (winHeight - padding * 2) - ((winHeight - padding * 2) % size);
+            console.log({mapWidth, mapHeight})
+        } else {
+            console.log("竖屏")
+            mapWidth = (winWidth - padding * 2) - ((winWidth - padding * 2) % size);
+            mapHeight = (winHeight - padding * 2) - ((winHeight - padding * 2) % size);
+            console.log({mapWidth, mapHeight})
+        }
+        console.log({screenRatio})
+        this.#data.mapWidth = mapWidth;
+        this.#data.mapHeight = mapHeight;
+        this.#data.rows = mapHeight / size;
+        this.#data.columns = mapWidth / size;
+        
+    }   
+
     // TODO: 初始化
     #init() {
         // 初始数据
         this.#initData();
         // 初始化界面
         this.#initUI();
+
     }
 
     // TODO: 初始化数据
@@ -191,12 +230,28 @@ class SnakeGame {
     // TODO: 初始化游戏地图
     init_map() {
         console.log("初始化游戏地图");
+        if (document.querySelector('.game-map')) {
+            document.querySelector('.game-map').remove();
+        }
         let gameMapElem = document.createElement("div");
         gameMapElem.classList.add('game-map');
+        
+        gameMapElem.style.width = this.#data.mapWidth + "px";
+        gameMapElem.style.height = this.#data.mapHeight + "px";
+
         let fragment = document.createDocumentFragment()
         fragment.appendChild(gameMapElem);
-        for (let i = 0; i < 20; i++) {
-            
+        this.#data.snakeElem = [];
+        for (let i = 0; i < this.#data.rows; i++) {
+            this.#data.snakeElem[i] = [];
+            for (let j = 0; j < this.#data.columns; j++) {
+                let gridElem = document.createElement("div");
+                gridElem.classList.add('grid');
+                gridElem.style.width = this.#data.gridSize + "px";
+                gridElem.style.height = this.#data.gridSize + "px";
+                this.#data.snakeElem[i][j] = gridElem;
+                gameMapElem.appendChild(gridElem);
+            }
         }
         this.gameWindow.appendChild(fragment);
     }
@@ -206,9 +261,18 @@ class SnakeGame {
         console.log("开始游戏")
         // - 关闭游戏开始菜单
         this.close_start_menu();
+        window.addEventListener('resize', () => {
+            // - 获取游戏地图属性
+            this.#getGameMapSize();
+            // - 初始化游戏地图
+            this.init_map();
+        });
+        // - 获取游戏地图属性
+        this.#getGameMapSize();
         // - 初始化游戏地图
         this.init_map();
         // - 初始化蛇
+
         // - 进入游戏主循环
     }
 
